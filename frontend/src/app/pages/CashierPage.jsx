@@ -450,6 +450,7 @@ export function CashierPage() {
               <div className="grid grid-cols-3 gap-2">
                 {paymentMethods.map((method) => (
                   <Button
+                    className="border-border"
                     key={method}
                     variant={paymentMethod === method ? "default" : "outline"}
                     onClick={() => setPaymentMethod(method)}
@@ -462,7 +463,11 @@ export function CashierPage() {
           </div>
 
           <DialogFooter>
-            <Button variant="outline" onClick={() => setCheckoutDialog(false)}>
+            <Button
+              className="border-border"
+              variant="outline"
+              onClick={() => setCheckoutDialog(false)}
+            >
               Cancel
             </Button>
             <Button onClick={handleCompletePayment}>Complete Payment</Button>
