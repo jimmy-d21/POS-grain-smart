@@ -1,27 +1,20 @@
 import { useState } from "react";
-import { useStore } from "../lib/store";
-import { Button } from "../components/ui/button";
-import { Card } from "../components/ui/card";
-import { Badge } from "../components/ui/badge";
+import { useCashier } from "../context/CashierContext.jsx";
+import { Button } from "../components/button";
+import { Card } from "../components/card";
+import { Badge } from "../components/badge";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "../components/ui/dialog";
-import { ScrollArea } from "../components/ui/scroll-area";
-import { Separator } from "../components/ui/separator";
+} from "../components/dialog";
+import { ScrollArea } from "../components/scroll-area";
+import { Separator } from "../components/separator";
+import { categories, paymentMethods } from "../data/CashierData";
 import { Plus, Minus, Trash2, Coffee, Thermometer, X } from "lucide-react";
 import { toast } from "sonner";
-
-const categories = [
-  "Regular Drinks",
-  "Frappee",
-  "Shimmer Juices",
-  "Premium Drinks",
-  "Rice Coffee Series",
-];
 
 export function CashierPage() {
   const {
@@ -34,7 +27,7 @@ export function CashierPage() {
     addTransaction,
     addOns,
     currentUser,
-  } = useStore();
+  } = useCashier();
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [customizeDialog, setCustomizeDialog] = useState({
     open: false,
@@ -453,7 +446,7 @@ export function CashierPage() {
                 Payment Method
               </label>
               <div className="grid grid-cols-3 gap-2">
-                {["Cash", "Card", "E-Wallet"].map((method) => (
+                {paymentMethods.map((method) => (
                   <Button
                     key={method}
                     variant={paymentMethod === method ? "default" : "outline"}

@@ -7,10 +7,10 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
-} from "../components/ui/card";
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
-import { Label } from "../components/ui/label";
+} from "../components/card";
+import { Button } from "../components/button";
+import { Input } from "../components/input";
+import { Label } from "../components/label";
 import { Coffee, Lock, Mail } from "lucide-react";
 import { toast } from "sonner";
 

@@ -1,10 +1,5 @@
-import { useStore } from "../lib/store.jsx";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../components/ui/card";
+import { useDashboard } from "../context/DashboardContext.jsx";
+import { Card, CardContent, CardHeader, CardTitle } from "../components/card";
 import {
   LineChart,
   Line,
@@ -20,13 +15,15 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { dashboardDate, dashboardChartColors } from "../data/DashboardData";
+
 import { DollarSign, ShoppingCart, TrendingUp, Package } from "lucide-react";
 
 export function DashboardPage() {
-  const { transactions, menuItems, inventory } = useStore();
+  const { transactions, menuItems, inventory } = useDashboard();
 
   // Calculate today's data
-  const today = new Date("2026-03-25");
+  const today = dashboardDate;
   const todayTransactions = transactions.filter((t) => {
     const txDate = new Date(t.date);
     return (
@@ -106,7 +103,7 @@ export function DashboardPage() {
     }),
   );
 
-  const COLORS = ["#2d5f3f", "#8b6f47", "#4a7c59", "#d4a574", "#1f4529"];
+  const COLORS = dashboardChartColors;
 
   // Low stock items
   const lowStockItems = inventory.filter(

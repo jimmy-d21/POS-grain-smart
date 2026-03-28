@@ -1,11 +1,6 @@
 import { useState } from "react";
-import { useStore } from "../lib/store";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../components/ui/card";
+import { useInventory } from "../context/InventoryContext.jsx";
+import { Card, CardContent, CardHeader, CardTitle } from "../components/card";
 import {
   Table,
   TableBody,
@@ -13,23 +8,23 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../components/ui/table";
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
-import { Badge } from "../components/ui/badge";
+} from "../components/table";
+import { Button } from "../components/button";
+import { Input } from "../components/input";
+import { Badge } from "../components/badge";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "../components/ui/dialog";
-import { Label } from "../components/ui/label";
+} from "../components/dialog";
+import { Label } from "../components/label";
 import { Search, Package, AlertTriangle, Plus } from "lucide-react";
 import { toast } from "sonner";
 
 export function InventoryPage() {
-  const { inventory, updateInventory } = useStore();
+  const { inventory, updateInventory } = useInventory();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [restockDialog, setRestockDialog] = useState({

@@ -1,11 +1,6 @@
 import { useState } from "react";
-import { useStore } from "../lib/store";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../components/ui/card";
+import { useTransactionHistory } from "../context/TransactionHistoryContext.jsx";
+import { Card, CardContent, CardHeader, CardTitle } from "../components/card";
 import {
   Table,
   TableBody,
@@ -13,24 +8,27 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../components/ui/table";
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
-import { Badge } from "../components/ui/badge";
+} from "../components/table";
+import { Button } from "../components/button";
+import { Input } from "../components/input";
+import { Badge } from "../components/badge";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "../components/ui/dialog";
-import { ScrollArea } from "../components/ui/scroll-area";
-import { Separator } from "../components/ui/separator";
+} from "../components/dialog";
+import { ScrollArea } from "../components/scroll-area";
+import { Separator } from "../components/separator";
+import { transactionStatuses } from "../data/TransactionHistoryData";
+import { getStatusBadge } from "../utils/status";
+import { formatDateTime } from "../utils/formatters";
 import { Search, Eye, Receipt, DollarSign, CreditCard } from "lucide-react";
 
 export function TransactionHistoryPage() {
-  const { transactions } = useStore();
+  const { transactions } = useTransactionHistory();
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState("All");
+  const [selectedStatus, setSelectedStatus] = useState(transactionStatuses[0]);
   const [detailsDialog, setDetailsDialog] = useState({
     open: false,
     transaction: null,
@@ -55,29 +53,6 @@ export function TransactionHistoryPage() {
   const refundedCount = transactions.filter(
     (t) => t.status === "Refunded",
   ).length;
-
-  const formatDate = (date) => {
-    return new Date(date).toLocaleString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "Completed":
-        return "default";
-      case "Refunded":
-        return "destructive";
-      case "Pending":
-        return "secondary";
-      default:
-        return "outline";
-    }
-  };
 
   return (
     <div className="p-6 space-y-6">
@@ -158,7 +133,7 @@ export function TransactionHistoryPage() {
               />
             </div>
             <div className="flex gap-2">
-              {["All", "Completed", "Refunded", "Pending"].map((status) => (
+              {transactionStatuses.map((status) => (
                 <Button
                   key={status}
                   variant={selectedStatus === status ? "default" : "outline"}
@@ -210,7 +185,7 @@ export function TransactionHistoryPage() {
                         {txn.id}
                       </TableCell>
                       <TableCell className="text-sm">
-                        {formatDate(txn.date)}
+                        {formatDateTime(txn.date)}
                       </TableCell>
                       <TableCell>{txn.items.length} item(s)</TableCell>
                       <TableCell>{txn.cashier}</TableCell>
@@ -221,7 +196,7 @@ export function TransactionHistoryPage() {
                         ₱{txn.total.toFixed(2)}
                       </TableCell>
                       <TableCell>
-                        <Badge variant={getStatusColor(txn.status)}>
+                        <Badge variant={getStatusBadge(txn.status)}>
                           {txn.status}
                         </Badge>
                       </TableCell>
@@ -276,7 +251,7 @@ export function TransactionHistoryPage() {
                 <div>
                   <p className="text-sm text-muted-foreground">Date & Time</p>
                   <p className="font-semibold">
-                    {formatDate(detailsDialog.transaction.date)}
+                    {formatDateTime(detailsDialog.transaction.date)}
                   </p>
                 </div>
                 <div>
@@ -294,7 +269,7 @@ export function TransactionHistoryPage() {
                 <div>
                   <p className="text-sm text-muted-foreground">Status</p>
                   <Badge
-                    variant={getStatusColor(detailsDialog.transaction.status)}
+                    variant={getStatusBadge(detailsDialog.transaction.status)}
                   >
                     {detailsDialog.transaction.status}
                   </Badge>

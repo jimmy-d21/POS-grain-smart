@@ -1,0 +1,12 @@
+-- inventory table
+CREATE TABLE inventory (
+  id VARCHAR(32) PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  category VARCHAR(100) NOT NULL,
+  current_stock INT NOT NULL,
+  unit VARCHAR(10) NOT NULL,
+  reorder_level INT NOT NULL,
+  last_restocked DATE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);

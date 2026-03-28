@@ -1,0 +1,10 @@
+-- staff table
+CREATE TABLE staff (
+  id VARCHAR(32) PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  role ENUM('Manager','Cashier') NOT NULL,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  status ENUM('Active','Inactive') NOT NULL DEFAULT 'Active',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);

@@ -1,46 +1,32 @@
 import { useState } from "react";
-import { useStore } from "../lib/store";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../components/ui/card";
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
-import { Label } from "../components/ui/label";
-import { Badge } from "../components/ui/badge";
+import { useMenuManagement } from "../context/MenuManagementContext.jsx";
+import { Card, CardContent, CardHeader, CardTitle } from "../components/card";
+import { Button } from "../components/button";
+import { Input } from "../components/input";
+import { Label } from "../components/label";
+import { Badge } from "../components/badge";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "../components/ui/dialog";
+} from "../components/dialog";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../components/ui/select";
-import { Checkbox } from "../components/ui/checkbox";
+} from "../components/select";
+import { Checkbox } from "../components/checkbox";
 import { Plus, Edit, Trash2, Coffee, Search } from "lucide-react";
+import { categories, temperatures, sizes } from "../data/MenuManagementData";
 import { toast } from "sonner";
 
-const categories = [
-  "Regular Drinks",
-  "Frappee",
-  "Shimmer Juices",
-  "Premium Drinks",
-  "Rice Coffee Series",
-];
-
-const temperatures = ["Hot", "Cold", "Both", "N/A"];
-const sizes = ["12oz", "16oz", "22oz"];
-
 export function MenuManagementPage() {
-  const { menuItems, addMenuItem, updateMenuItem, deleteMenuItem } = useStore();
+  const { menuItems, addMenuItem, updateMenuItem, deleteMenuItem } =
+    useMenuManagement();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [editDialog, setEditDialog] = useState({

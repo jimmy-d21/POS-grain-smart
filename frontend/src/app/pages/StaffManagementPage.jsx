@@ -1,11 +1,6 @@
 import { useState } from "react";
-import { useStore } from "../lib/store";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../components/ui/card";
+import { useStaff } from "../context/StaffContext.jsx";
+import { Card, CardContent, CardHeader, CardTitle } from "../components/card";
 import {
   Table,
   TableBody,
@@ -13,31 +8,32 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../components/ui/table";
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
-import { Label } from "../components/ui/label";
-import { Badge } from "../components/ui/badge";
+} from "../components/table";
+import { Button } from "../components/button";
+import { Input } from "../components/input";
+import { Label } from "../components/label";
+import { Badge } from "../components/badge";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "../components/ui/dialog";
+} from "../components/dialog";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../components/ui/select";
+} from "../components/select";
+import { staffRoles, staffStatus } from "../data/StaffManagementData";
 import { Users, UserPlus, Edit, Search, Shield, User, Eye } from "lucide-react";
 import { toast } from "sonner";
-import { demoPasswords } from "../lib/data";
+import { demoPasswords } from "../data/mockData";
 
 export function StaffManagementPage() {
-  const { staff, addStaff, updateStaff } = useStore();
+  const { staff, addStaff, updateStaff } = useStaff();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedRole, setSelectedRole] = useState("All");
   const [editDialog, setEditDialog] = useState({
@@ -200,7 +196,7 @@ export function StaffManagementPage() {
               />
             </div>
             <div className="flex gap-2">
-              {["All", "Manager", "Cashier"].map((role) => (
+              {staffRoles.map((role) => (
                 <Button
                   key={role}
                   variant={selectedRole === role ? "default" : "outline"}
@@ -457,8 +453,13 @@ export function StaffManagementPage() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Cashier">Cashier</SelectItem>
-                  <SelectItem value="Manager">Manager</SelectItem>
+                  {staffRoles
+                    .filter((role) => role !== "All")
+                    .map((role) => (
+                      <SelectItem key={role} value={role}>
+                        {role}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
               <p className="text-xs text-muted-foreground mt-1">
@@ -480,8 +481,11 @@ export function StaffManagementPage() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Active">Active</SelectItem>
-                  <SelectItem value="Inactive">Inactive</SelectItem>
+                  {staffStatus.map((status) => (
+                    <SelectItem key={status} value={status}>
+                      {status}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>

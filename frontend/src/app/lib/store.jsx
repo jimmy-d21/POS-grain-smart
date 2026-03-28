@@ -6,7 +6,7 @@ import {
   mockStaff,
   mockTransactions,
   demoPasswords,
-} from "./data";
+} from "../data/mockData";
 
 // Store Context
 const StoreContext = createContext(undefined);
