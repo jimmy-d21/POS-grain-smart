@@ -149,6 +149,7 @@ export function CashierPage() {
           {/* Category Filters */}
           <div className="flex gap-2 flex-wrap">
             <Button
+              className="border-border"
               variant={selectedCategory === "All" ? "default" : "outline"}
               onClick={() => setSelectedCategory("All")}
               size="sm"
@@ -157,6 +158,7 @@ export function CashierPage() {
             </Button>
             {categories.map((cat) => (
               <Button
+                className="border-border"
                 key={cat}
                 variant={selectedCategory === cat ? "default" : "outline"}
                 onClick={() => setSelectedCategory(cat)}
