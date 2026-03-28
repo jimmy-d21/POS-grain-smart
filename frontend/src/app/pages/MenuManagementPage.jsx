@@ -186,12 +186,13 @@ export function MenuManagementPage() {
                 placeholder="Search menu items..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
+                className="pl-10 bg-muted/50"
               />
             </div>
             <div className="flex gap-2 flex-wrap">
               <Button
                 variant={selectedCategory === "All" ? "default" : "outline"}
+                className="border-border"
                 onClick={() => setSelectedCategory("All")}
                 size="sm"
               >
@@ -199,6 +200,7 @@ export function MenuManagementPage() {
               </Button>
               {categories.map((cat) => (
                 <Button
+                  className="border-border"
                   key={cat}
                   variant={selectedCategory === cat ? "default" : "outline"}
                   onClick={() => setSelectedCategory(cat)}

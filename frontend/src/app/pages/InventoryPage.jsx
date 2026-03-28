@@ -156,12 +156,13 @@ export function InventoryPage() {
                 placeholder="Search inventory..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
+                className="pl-10 bg-muted/50"
               />
             </div>
             <div className="flex gap-2 flex-wrap">
               {categories.map((cat) => (
                 <Button
+                  className="border-border"
                   key={cat}
                   variant={selectedCategory === cat ? "default" : "outline"}
                   onClick={() => setSelectedCategory(cat)}
@@ -235,6 +236,7 @@ export function InventoryPage() {
                         </TableCell>
                         <TableCell>
                           <Button
+                            className="border-border"
                             size="sm"
                             variant="outline"
                             onClick={() =>
