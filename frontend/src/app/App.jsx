@@ -19,7 +19,7 @@ export default function App() {
               <TransactionHistoryProvider>
                 <StaffProvider>
                   <RouterProvider router={router} />
-                  <Toaster />
+                  <Toaster position="top-right" />
                 </StaffProvider>
               </TransactionHistoryProvider>
             </MenuManagementProvider>
