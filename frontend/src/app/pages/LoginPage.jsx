@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { useStore } from "../lib/store.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
 import {
   Card,
   CardContent,
@@ -16,7 +16,7 @@ import { toast } from "sonner";
 
 export function LoginPage() {
   const navigate = useNavigate();
-  const { login } = useStore();
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);

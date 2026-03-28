@@ -422,85 +422,389 @@ export const demoPasswords = {
   "pedro.garcia@grainsmart.com": "cashier123",
 };
 
-// Generate Mock Transactions - 50 transactions
-const generateMockTransactions = () => {
+// Default Mock Transactions - Fixed data for consistent metrics
+const createDefaultTransactions = () => {
   const transactions = [];
   const today = new Date("2026-03-25");
 
-  for (let i = 0; i < 50; i++) {
-    const daysAgo = Math.floor(Math.random() * 7);
-    const date = new Date(today);
-    date.setDate(date.getDate() - daysAgo);
-    date.setHours(Math.floor(Math.random() * 12) + 8);
-    date.setMinutes(Math.floor(Math.random() * 60));
+  // Today's transactions (March 25, 2026)
+  const todayTransactions = [
+    {
+      items: [
+        {
+          id: "ci-1-0",
+          menuItem: mockMenuItems[0], // Classic Coffee
+          size: "16oz",
+          temperature: "Hot",
+          addOns: [mockAddOns[0]], // Espresso Shot
+          quantity: 1,
+          subtotal: (65 * 1.2 + 20) * 1,
+        },
+      ],
+      date: new Date("2026-03-25T08:15:00"),
+      paymentMethod: "Card",
+      status: "Completed",
+      cashier: mockStaff[0].name,
+    },
+    {
+      items: [
+        {
+          id: "ci-2-0",
+          menuItem: mockMenuItems[2], // Cappuccino
+          size: "16oz",
+          temperature: "Hot",
+          addOns: [],
+          quantity: 2,
+          subtotal: 80 * 1.2 * 2,
+        },
+      ],
+      date: new Date("2026-03-25T08:45:00"),
+      paymentMethod: "Cash",
+      status: "Completed",
+      cashier: mockStaff[1].name,
+    },
+    {
+      items: [
+        {
+          id: "ci-3-0",
+          menuItem: mockMenuItems[3], // Orange Juice
+          size: "12oz",
+          temperature: "Cold",
+          addOns: [],
+          quantity: 1,
+          subtotal: 75 * 1,
+        },
+      ],
+      date: new Date("2026-03-25T09:20:00"),
+      paymentMethod: "E-Wallet",
+      status: "Completed",
+      cashier: mockStaff[0].name,
+    },
+    {
+      items: [
+        {
+          id: "ci-4-0",
+          menuItem: mockMenuItems[5], // Classic Milk Tea
+          size: "22oz",
+          temperature: "Cold",
+          addOns: [mockAddOns[1]], // Extra Pearls
+          quantity: 1,
+          subtotal: (70 * 1.4 + 15) * 1,
+        },
+      ],
+      date: new Date("2026-03-25T09:50:00"),
+      paymentMethod: "Card",
+      status: "Completed",
+      cashier: mockStaff[1].name,
+    },
+    {
+      items: [
+        {
+          id: "ci-5-0",
+          menuItem: mockMenuItems[1], // Americano
+          size: "16oz",
+          temperature: "Hot",
+          addOns: [mockAddOns[0]], // Espresso Shot
+          quantity: 1,
+          subtotal: (70 * 1.2 + 20) * 1,
+        },
+      ],
+      date: new Date("2026-03-25T10:15:00"),
+      paymentMethod: "Cash",
+      status: "Completed",
+      cashier: mockStaff[2].name,
+    },
+    {
+      items: [
+        {
+          id: "ci-6-0",
+          menuItem: mockMenuItems[9], // Vanilla Cream Frappee
+          size: "20oz",
+          temperature: "Cold",
+          addOns: [mockAddOns[2]], // Caramel Drizzle
+          quantity: 1,
+          subtotal: (95 * 1.3 + 10) * 1,
+        },
+      ],
+      date: new Date("2026-03-25T10:45:00"),
+      paymentMethod: "Card",
+      status: "Completed",
+      cashier: mockStaff[0].name,
+    },
+    {
+      items: [
+        {
+          id: "ci-7-0",
+          menuItem: mockMenuItems[6], // Taro Milk Tea
+          size: "16oz",
+          temperature: "Cold",
+          addOns: [],
+          quantity: 1,
+          subtotal: 75 * 1.2,
+        },
+      ],
+      date: new Date("2026-03-25T11:20:00"),
+      paymentMethod: "E-Wallet",
+      status: "Completed",
+      cashier: mockStaff[1].name,
+    },
+    {
+      items: [
+        {
+          id: "ci-8-0",
+          menuItem: mockMenuItems[0], // Classic Coffee
+          size: "12oz",
+          temperature: "Hot",
+          addOns: [],
+          quantity: 3,
+          subtotal: 65 * 1 * 3,
+        },
+      ],
+      date: new Date("2026-03-25T12:00:00"),
+      paymentMethod: "Cash",
+      status: "Completed",
+      cashier: mockStaff[2].name,
+    },
+    {
+      items: [
+        {
+          id: "ci-9-0",
+          menuItem: mockMenuItems[4], // Mango Juice
+          size: "22oz",
+          temperature: "Cold",
+          addOns: [],
+          quantity: 2,
+          subtotal: 75 * 1.4 * 2,
+        },
+      ],
+      date: new Date("2026-03-25T12:30:00"),
+      paymentMethod: "Card",
+      status: "Completed",
+      cashier: mockStaff[0].name,
+    },
+    {
+      items: [
+        {
+          id: "ci-10-0",
+          menuItem: mockMenuItems[2], // Cappuccino
+          size: "12oz",
+          temperature: "Hot",
+          addOns: [mockAddOns[0]], // Espresso Shot
+          quantity: 1,
+          subtotal: (80 * 1 + 20) * 1,
+        },
+      ],
+      date: new Date("2026-03-25T13:15:00"),
+      paymentMethod: "E-Wallet",
+      status: "Completed",
+      cashier: mockStaff[1].name,
+    },
+    {
+      items: [
+        {
+          id: "ci-11-0",
+          menuItem: mockMenuItems[8], // Chocolate Cream Frappee
+          size: "20oz",
+          temperature: "Cold",
+          addOns: [mockAddOns[2]], // Caramel Drizzle
+          quantity: 1,
+          subtotal: (95 * 1.3 + 10) * 1,
+        },
+      ],
+      date: new Date("2026-03-25T14:00:00"),
+      paymentMethod: "Cash",
+      status: "Completed",
+      cashier: mockStaff[0].name,
+    },
+    {
+      items: [
+        {
+          id: "ci-12-0",
+          menuItem: mockMenuItems[1], // Americano
+          size: "22oz",
+          temperature: "Hot",
+          addOns: [],
+          quantity: 1,
+          subtotal: 70 * 1.4,
+        },
+      ],
+      date: new Date("2026-03-25T14:45:00"),
+      paymentMethod: "Card",
+      status: "Completed",
+      cashier: mockStaff[2].name,
+    },
+    {
+      items: [
+        {
+          id: "ci-13-0",
+          menuItem: mockMenuItems[5], // Classic Milk Tea
+          size: "16oz",
+          temperature: "Cold",
+          addOns: [mockAddOns[1]], // Extra Pearls
+          quantity: 2,
+          subtotal: (70 * 1.2 + 15) * 2,
+        },
+      ],
+      date: new Date("2026-03-25T15:30:00"),
+      paymentMethod: "E-Wallet",
+      status: "Completed",
+      cashier: mockStaff[1].name,
+    },
+    {
+      items: [
+        {
+          id: "ci-14-0",
+          menuItem: mockMenuItems[3], // Orange Juice
+          size: "16oz",
+          temperature: "Cold",
+          addOns: [],
+          quantity: 1,
+          subtotal: 75 * 1.2,
+        },
+        {
+          id: "ci-14-1",
+          menuItem: mockMenuItems[0], // Classic Coffee
+          size: "12oz",
+          temperature: "Hot",
+          addOns: [],
+          quantity: 1,
+          subtotal: 65 * 1,
+        },
+      ],
+      date: new Date("2026-03-25T16:00:00"),
+      paymentMethod: "Cash",
+      status: "Completed",
+      cashier: mockStaff[0].name,
+    },
+    {
+      items: [
+        {
+          id: "ci-15-0",
+          menuItem: mockMenuItems[9], // Vanilla Cream Frappee
+          size: "20oz",
+          temperature: "Cold",
+          addOns: [],
+          quantity: 1,
+          subtotal: 95 * 1.3,
+        },
+      ],
+      date: new Date("2026-03-25T16:45:00"),
+      paymentMethod: "Card",
+      status: "Completed",
+      cashier: mockStaff[2].name,
+    },
+    {
+      items: [
+        {
+          id: "ci-16-0",
+          menuItem: mockMenuItems[2], // Cappuccino
+          size: "16oz",
+          temperature: "Hot",
+          addOns: [mockAddOns[0]], // Espresso Shot
+          quantity: 1,
+          subtotal: (80 * 1.2 + 20) * 1,
+        },
+      ],
+      date: new Date("2026-03-25T17:20:00"),
+      paymentMethod: "E-Wallet",
+      status: "Completed",
+      cashier: mockStaff[1].name,
+    },
+  ];
 
-    const numItems = Math.floor(Math.random() * 3) + 1;
-    const items = [];
+  // Add transaction IDs and calculate totals
+  todayTransactions.forEach((txn, idx) => {
+    txn.id = `txn-${String(idx + 1).padStart(4, "0")}`;
+    txn.total = txn.items.reduce((sum, item) => sum + item.subtotal, 0);
+  });
 
-    for (let j = 0; j < numItems; j++) {
-      const menuItem =
-        mockMenuItems[Math.floor(Math.random() * mockMenuItems.length)];
-      const size =
-        menuItem.availableSizes[
-          Math.floor(Math.random() * menuItem.availableSizes.length)
-        ];
-      const temp =
-        menuItem.temperature === "Both"
-          ? Math.random() > 0.5
-            ? "Hot"
-            : "Cold"
-          : menuItem.temperature === "Hot"
-            ? "Hot"
-            : "Cold";
+  transactions.push(...todayTransactions);
 
-      const numAddOns = Math.floor(Math.random() * 3);
-      const selectedAddOns = [];
-      for (let k = 0; k < numAddOns; k++) {
-        const addOn = mockAddOns[Math.floor(Math.random() * mockAddOns.length)];
-        if (!selectedAddOns.find((a) => a.id === addOn.id)) {
-          selectedAddOns.push(addOn);
-        }
-      }
+  // Add previous days transactions
+  const previousDaysCount = 25;
+  const previousTransactions = [
+    {
+      date: new Date("2026-03-24T09:30:00"),
+      total: 450,
+      paymentMethod: "Card",
+      status: "Completed",
+      cashier: mockStaff[0].name,
+      items: [
+        {
+          menuItem: mockMenuItems[1],
+          size: "16oz",
+          temperature: "Hot",
+          addOns: [],
+          quantity: 2,
+          subtotal: 70 * 1.2 * 2,
+        },
+      ],
+    },
+    {
+      date: new Date("2026-03-24T11:15:00"),
+      total: 380,
+      paymentMethod: "Cash",
+      status: "Completed",
+      cashier: mockStaff[1].name,
+      items: [],
+    },
+    {
+      date: new Date("2026-03-24T13:45:00"),
+      total: 520,
+      paymentMethod: "E-Wallet",
+      status: "Completed",
+      cashier: mockStaff[2].name,
+      items: [],
+    },
+    {
+      date: new Date("2026-03-24T15:30:00"),
+      total: 310,
+      paymentMethod: "Card",
+      status: "Completed",
+      cashier: mockStaff[0].name,
+      items: [],
+    },
+    {
+      date: new Date("2026-03-23T10:00:00"),
+      total: 625,
+      paymentMethod: "Cash",
+      status: "Completed",
+      cashier: mockStaff[1].name,
+      items: [],
+    },
+    {
+      date: new Date("2026-03-23T12:30:00"),
+      total: 480,
+      paymentMethod: "Card",
+      status: "Completed",
+      cashier: mockStaff[2].name,
+      items: [],
+    },
+    {
+      date: new Date("2026-03-23T14:15:00"),
+      total: 390,
+      paymentMethod: "E-Wallet",
+      status: "Completed",
+      cashier: mockStaff[0].name,
+      items: [],
+    },
+    {
+      date: new Date("2026-03-22T09:45:00"),
+      total: 550,
+      paymentMethod: "Card",
+      status: "Completed",
+      cashier: mockStaff[1].name,
+      items: [],
+    },
+  ];
 
-      const sizeMultiplier = size === "12oz" ? 1 : size === "16oz" ? 1.2 : 1.4;
-      const addOnsTotal = selectedAddOns.reduce((sum, a) => sum + a.price, 0);
-      const quantity = Math.floor(Math.random() * 2) + 1;
+  previousTransactions.forEach((txn, idx) => {
+    txn.id = `txn-${String(todayTransactions.length + idx + 1).padStart(4, "0")}`;
+  });
 
-      items.push({
-        id: `ci-${i}-${j}`,
-        menuItem,
-        size,
-        temperature: temp,
-        addOns: selectedAddOns,
-        quantity,
-        subtotal:
-          (menuItem.basePrice * sizeMultiplier + addOnsTotal) * quantity,
-      });
-    }
-
-    const total = items.reduce((sum, item) => sum + item.subtotal, 0);
-    const paymentMethods = ["Cash", "Card", "E-Wallet"];
-    const statuses = [
-      "Completed",
-      "Completed",
-      "Completed",
-      "Completed",
-      "Refunded",
-    ];
-
-    transactions.push({
-      id: `txn-${String(50 - i).padStart(4, "0")}`,
-      items,
-      total,
-      date,
-      paymentMethod:
-        paymentMethods[Math.floor(Math.random() * paymentMethods.length)],
-      status: statuses[Math.floor(Math.random() * statuses.length)],
-      cashier: mockStaff[Math.floor(Math.random() * 3)].name,
-    });
-  }
+  transactions.push(...previousTransactions);
 
   return transactions.sort((a, b) => b.date.getTime() - a.date.getTime());
 };
 
-export const mockTransactions = generateMockTransactions();
+export const mockTransactions = createDefaultTransactions();

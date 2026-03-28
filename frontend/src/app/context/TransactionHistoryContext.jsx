@@ -1,10 +1,10 @@
-import { createContext, useContext } from "react";
-import { useStore } from "../lib/store.jsx";
+import { createContext, useContext, useState } from "react";
+import { mockTransactions } from "../data/mockData";
 
 const TransactionHistoryContext = createContext(undefined);
 
 export function TransactionHistoryProvider({ children }) {
-  const { transactions } = useStore();
+  const [transactions] = useState(mockTransactions);
 
   return (
     <TransactionHistoryContext.Provider value={{ transactions }}>

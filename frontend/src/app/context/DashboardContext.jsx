@@ -1,10 +1,16 @@
-import { createContext, useContext } from "react";
-import { useStore } from "../lib/store.jsx";
+import { createContext, useContext, useState } from "react";
+import {
+  mockTransactions,
+  mockMenuItems,
+  mockInventory,
+} from "../data/mockData";
 
 const DashboardContext = createContext(undefined);
 
 export function DashboardProvider({ children }) {
-  const { transactions, menuItems, inventory } = useStore();
+  const [transactions] = useState(mockTransactions);
+  const [menuItems] = useState(mockMenuItems);
+  const [inventory] = useState(mockInventory);
 
   return (
     <DashboardContext.Provider

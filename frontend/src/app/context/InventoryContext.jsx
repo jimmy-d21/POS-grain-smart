@@ -1,10 +1,16 @@
-import { createContext, useContext } from "react";
-import { useStore } from "../lib/store.jsx";
+import { createContext, useContext, useState } from "react";
+import { mockInventory } from "../data/mockData";
 
 const InventoryContext = createContext(undefined);
 
 export function InventoryProvider({ children }) {
-  const { inventory, updateInventory } = useStore();
+  const [inventory, setInventory] = useState(mockInventory);
+
+  const updateInventory = (id, updates) => {
+    setInventory((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, ...updates } : item)),
+    );
+  };
 
   return (
     <InventoryContext.Provider value={{ inventory, updateInventory }}>

@@ -1,10 +1,24 @@
-import { createContext, useContext } from "react";
-import { useStore } from "../lib/store.jsx";
+import { createContext, useContext, useState } from "react";
+import { mockMenuItems } from "../data/mockData";
 
 const MenuManagementContext = createContext(undefined);
 
 export function MenuManagementProvider({ children }) {
-  const { menuItems, addMenuItem, updateMenuItem, deleteMenuItem } = useStore();
+  const [menuItems, setMenuItems] = useState(mockMenuItems);
+
+  const addMenuItem = (item) => {
+    setMenuItems((prev) => [...prev, item]);
+  };
+
+  const updateMenuItem = (id, updates) => {
+    setMenuItems((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, ...updates } : item)),
+    );
+  };
+
+  const deleteMenuItem = (id) => {
+    setMenuItems((prev) => prev.filter((item) => item.id !== id));
+  };
 
   return (
     <MenuManagementContext.Provider

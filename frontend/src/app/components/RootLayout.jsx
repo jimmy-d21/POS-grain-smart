@@ -9,11 +9,13 @@ import {
   Coffee,
   LogOut,
 } from "lucide-react";
-import { useStore } from "../lib/store.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
+import { useCashier } from "../context/CashierContext.jsx";
 import { Button } from "./ui/button";
 
 export function RootLayout() {
-  const { currentUser, cart, isAuthenticated, logout } = useStore();
+  const { currentUser, isAuthenticated, logout } = useAuth();
+  const { cart } = useCashier();
 
   // Redirect to login if not authenticated
   if (!isAuthenticated || !currentUser) {

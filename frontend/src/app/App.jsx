@@ -1,5 +1,4 @@
 import { RouterProvider } from "react-router";
-import { StoreProvider } from "./lib/store.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import { CashierProvider } from "./context/CashierContext.jsx";
 import { DashboardProvider } from "./context/DashboardContext.jsx";
@@ -12,23 +11,21 @@ import { Toaster } from "./components/sonner";
 
 export default function App() {
   return (
-    <StoreProvider>
-      <AuthProvider>
-        <CashierProvider>
-          <DashboardProvider>
-            <InventoryProvider>
-              <MenuManagementProvider>
-                <TransactionHistoryProvider>
-                  <StaffProvider>
-                    <RouterProvider router={router} />
-                    <Toaster />
-                  </StaffProvider>
-                </TransactionHistoryProvider>
-              </MenuManagementProvider>
-            </InventoryProvider>
-          </DashboardProvider>
-        </CashierProvider>
-      </AuthProvider>
-    </StoreProvider>
+    <AuthProvider>
+      <CashierProvider>
+        <DashboardProvider>
+          <InventoryProvider>
+            <MenuManagementProvider>
+              <TransactionHistoryProvider>
+                <StaffProvider>
+                  <RouterProvider router={router} />
+                  <Toaster />
+                </StaffProvider>
+              </TransactionHistoryProvider>
+            </MenuManagementProvider>
+          </InventoryProvider>
+        </DashboardProvider>
+      </CashierProvider>
+    </AuthProvider>
   );
 }

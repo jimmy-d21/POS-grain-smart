@@ -1,20 +1,33 @@
-import { createContext, useContext } from "react";
-import { useStore } from "../lib/store.jsx";
+import { createContext, useContext, useState } from "react";
+import { mockMenuItems, mockAddOns } from "../data/mockData";
 
 const CashierContext = createContext(undefined);
 
 export function CashierProvider({ children }) {
-  const {
-    cart,
-    addToCart,
-    removeFromCart,
-    updateCartItem,
-    clearCart,
-    addTransaction,
-    menuItems,
-    addOns,
-    currentUser,
-  } = useStore();
+  const [cart, setCart] = useState([]);
+  const [transactions, setTransactions] = useState([]);
+
+  const addToCart = (item) => {
+    setCart((prev) => [...prev, item]);
+  };
+
+  const removeFromCart = (id) => {
+    setCart((prev) => prev.filter((item) => item.id !== id));
+  };
+
+  const updateCartItem = (id, updates) => {
+    setCart((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, ...updates } : item)),
+    );
+  };
+
+  const clearCart = () => {
+    setCart([]);
+  };
+
+  const addTransaction = (transaction) => {
+    setTransactions((prev) => [transaction, ...prev]);
+  };
 
   return (
     <CashierContext.Provider
@@ -25,9 +38,9 @@ export function CashierProvider({ children }) {
         updateCartItem,
         clearCart,
         addTransaction,
-        menuItems,
-        addOns,
-        currentUser,
+        transactions,
+        menuItems: mockMenuItems,
+        addOns: mockAddOns,
       }}
     >
       {children}
