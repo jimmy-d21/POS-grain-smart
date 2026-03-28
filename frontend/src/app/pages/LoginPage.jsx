@@ -1,39 +1,45 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router';
-import { useStore } from '../lib/store.jsx';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../components/ui/card';
-import { Button } from '../components/ui/button';
-import { Input } from '../components/ui/input';
-import { Label } from '../components/ui/label';
-import { Coffee, Lock, Mail } from 'lucide-react';
-import { toast } from 'sonner';
+import { useState } from "react";
+import { useNavigate } from "react-router";
+import { useStore } from "../lib/store.jsx";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "../components/ui/card";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
+import { Coffee, Lock, Mail } from "lucide-react";
+import { toast } from "sonner";
 
 export function LoginPage() {
   const navigate = useNavigate();
   const { login } = useStore();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    
+
     if (!email || !password) {
-      toast.error('Please enter email and password');
+      toast.error("Please enter email and password");
       return;
     }
 
     setIsLoading(true);
-    
+
     // Simulate API call delay
     setTimeout(() => {
       const success = login(email, password);
-      
+
       if (success) {
-        toast.success('Login successful!');
-        navigate('/');
+        toast.success("Login successful!");
+        navigate("/");
       } else {
-        toast.error('Invalid email or password');
+        toast.error("Invalid email or password");
         setIsLoading(false);
       }
     }, 500);
@@ -41,19 +47,22 @@ export function LoginPage() {
 
   const handleDemoLogin = (role) => {
     const demoCredentials = {
-      Manager: { email: 'maria.santos@grainsmart.com', password: 'admin123' },
-      Cashier: { email: 'juan.delacruz@grainsmart.com', password: 'cashier123' },
+      Manager: { email: "maria.santos@grainsmart.com", password: "admin123" },
+      Cashier: {
+        email: "juan.delacruz@grainsmart.com",
+        password: "cashier123",
+      },
     };
 
     const creds = demoCredentials[role];
     setEmail(creds.email);
     setPassword(creds.password);
-    
+
     setIsLoading(true);
     setTimeout(() => {
       login(creds.email, creds.password);
       toast.success(`Logged in as ${role}!`);
-      navigate('/');
+      navigate("/");
     }, 500);
   };
 
@@ -65,7 +74,9 @@ export function LoginPage() {
           <div className="inline-flex items-center justify-center w-20 h-20 bg-primary rounded-2xl shadow-lg mb-4">
             <Coffee className="w-12 h-12 text-primary-foreground" />
           </div>
-          <h1 className="text-4xl font-bold text-foreground">Grainsmart Coffee</h1>
+          <h1 className="text-4xl font-bold text-foreground">
+            Grainsmart Coffee
+          </h1>
           <p className="text-muted-foreground">Point of Sale System</p>
         </div>
 
@@ -110,7 +121,7 @@ export function LoginPage() {
               </div>
 
               <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? 'Signing in...' : 'Sign In'}
+                {isLoading ? "Signing in..." : "Sign In"}
               </Button>
             </form>
 
@@ -121,7 +132,9 @@ export function LoginPage() {
                   <span className="w-full border-t" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-card px-2 text-muted-foreground">Demo Accounts</span>
+                  <span className="bg-card px-2 text-muted-foreground">
+                    Demo Accounts
+                  </span>
                 </div>
               </div>
 
@@ -129,7 +142,7 @@ export function LoginPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => handleDemoLogin('Manager')}
+                  onClick={() => handleDemoLogin("Manager")}
                   disabled={isLoading}
                   className="w-full"
                 >
@@ -139,7 +152,7 @@ export function LoginPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => handleDemoLogin('Cashier')}
+                  onClick={() => handleDemoLogin("Cashier")}
                   disabled={isLoading}
                   className="w-full"
                 >

@@ -25,13 +25,7 @@ import {
   SelectValue,
 } from "../components/ui/select";
 import { Checkbox } from "../components/ui/checkbox";
-import {
-  Plus,
-  Edit,
-  Trash2,
-  Coffee,
-  Search,
-} from "lucide-react";
+import { Plus, Edit, Trash2, Coffee, Search } from "lucide-react";
 import { toast } from "sonner";
 
 const categories = [
@@ -46,27 +40,21 @@ const temperatures = ["Hot", "Cold", "Both", "N/A"];
 const sizes = ["12oz", "16oz", "22oz"];
 
 export function MenuManagementPage() {
-  const {
-    menuItems,
-    addMenuItem,
-    updateMenuItem,
-    deleteMenuItem,
-  } = useStore();
+  const { menuItems, addMenuItem, updateMenuItem, deleteMenuItem } = useStore();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [editDialog, setEditDialog] = useState({
     open: false,
     item: null,
-    mode: "add",
   });
 
   // Form state
   const [formData, setFormData] = useState({
     name: "",
-    category: "Regular Drinks",
+    category: "",
     basePrice: "",
-    temperature: "Cold",
-    availableSizes: ["16oz"],
+    temperature: "",
+    availableSizes: [],
   });
 
   const filteredItems = menuItems.filter((item) => {
@@ -74,20 +62,19 @@ export function MenuManagementPage() {
       .toLowerCase()
       .includes(searchQuery.toLowerCase());
     const matchesCategory =
-      selectedCategory === "All" ||
-      item.category === selectedCategory;
+      selectedCategory === "All" || item.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
   const handleOpenAdd = () => {
     setFormData({
       name: "",
-      category: "Regular Drinks",
+      category: "",
       basePrice: "",
-      temperature: "Cold",
-      availableSizes: ["16oz"],
+      temperature: "",
+      availableSizes: [],
     });
-    setEditDialog({ open: true, item: null, mode: "add" });
+    setEditDialog({ open: true, item: null });
   };
 
   const handleOpenEdit = (item) => {
@@ -96,9 +83,9 @@ export function MenuManagementPage() {
       category: item.category,
       basePrice: item.basePrice.toString(),
       temperature: item.temperature,
-      availableSizes: item.availableSizes,
+      availableSizes: [...item.availableSizes],
     });
-    setEditDialog({ open: true, item, mode: "edit" });
+    setEditDialog({ open: true, item: item });
   };
 
   const handleSave = () => {
@@ -117,7 +104,7 @@ export function MenuManagementPage() {
       return;
     }
 
-    if (editDialog.mode === "add") {
+    if (!editDialog.item) {
       const newItem = {
         id: `m${Date.now()}`,
         name: formData.name,
@@ -128,7 +115,7 @@ export function MenuManagementPage() {
       };
       addMenuItem(newItem);
       toast.success("Menu item added successfully!");
-    } else if (editDialog.item) {
+    } else {
       updateMenuItem(editDialog.item.id, {
         name: formData.name,
         category: formData.category,
@@ -139,25 +126,23 @@ export function MenuManagementPage() {
       toast.success("Menu item updated successfully!");
     }
 
-    setEditDialog({ open: false, item: null, mode: "add" });
+    setEditDialog({ open: false, item: null });
   };
 
   const handleDelete = (item) => {
-    if (
-      confirm(`Are you sure you want to delete "${item.name}"?`)
-    ) {
+    if (confirm(`Are you sure you want to delete "${item.name}"?`)) {
       deleteMenuItem(item.id);
       toast.success("Menu item deleted");
     }
   };
 
   const toggleSize = (size) => {
-    setFormData((prev) => {
-      const sizes = prev.availableSizes.includes(size)
+    setFormData((prev) => ({
+      ...prev,
+      availableSizes: prev.availableSizes.includes(size)
         ? prev.availableSizes.filter((s) => s !== size)
-        : [...prev.availableSizes, size];
-      return { ...prev, availableSizes: sizes };
-    });
+        : [...prev.availableSizes, size],
+    }));
   };
 
   return (
@@ -165,9 +150,7 @@ export function MenuManagementPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-semibold mb-2">
-            Menu Management
-          </h1>
+          <h1 className="text-3xl font-semibold mb-2">Menu Management</h1>
           <p className="text-muted-foreground">
             Add, edit, and manage menu items
           </p>
@@ -179,19 +162,7 @@ export function MenuManagementPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Total Items
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {menuItems.length}
-            </div>
-          </CardContent>
-        </Card>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {categories.map((cat) => (
           <Card key={cat}>
             <CardHeader className="pb-2">
@@ -201,11 +172,7 @@ export function MenuManagementPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {
-                  menuItems.filter(
-                    (item) => item.category === cat,
-                  ).length
-                }
+                {menuItems.filter((item) => item.category === cat).length}
               </div>
             </CardContent>
           </Card>
@@ -215,8 +182,8 @@ export function MenuManagementPage() {
       {/* Filters */}
       <Card>
         <CardContent className="pt-6">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1 relative">
+          <div className="flex flex-col md:flex-row gap-4 items-end">
+            <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
                 placeholder="Search menu items..."
@@ -227,11 +194,7 @@ export function MenuManagementPage() {
             </div>
             <div className="flex gap-2 flex-wrap">
               <Button
-                variant={
-                  selectedCategory === "All"
-                    ? "default"
-                    : "outline"
-                }
+                variant={selectedCategory === "All" ? "default" : "outline"}
                 onClick={() => setSelectedCategory("All")}
                 size="sm"
               >
@@ -240,11 +203,7 @@ export function MenuManagementPage() {
               {categories.map((cat) => (
                 <Button
                   key={cat}
-                  variant={
-                    selectedCategory === cat
-                      ? "default"
-                      : "outline"
-                  }
+                  variant={selectedCategory === cat ? "default" : "outline"}
                   onClick={() => setSelectedCategory(cat)}
                   size="sm"
                 >
@@ -257,17 +216,12 @@ export function MenuManagementPage() {
       </Card>
 
       {/* Menu Items Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredItems.map((item) => (
-          <Card
-            key={item.id}
-            className="hover:shadow-lg transition-shadow"
-          >
+          <Card key={item.id} className="hover:shadow-lg transition-shadow">
             <CardContent className="pt-6">
-              <div className="flex items-start justify-between mb-4">
-                <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center">
-                  <Coffee className="w-8 h-8 text-primary" />
-                </div>
+              <div className="flex items-center justify-between mb-4">
+                <Badge variant="secondary">{item.category}</Badge>
                 <div className="flex gap-1">
                   <Button
                     variant="ghost"
@@ -287,9 +241,7 @@ export function MenuManagementPage() {
                 </div>
               </div>
 
-              <h3 className="font-semibold mb-2 line-clamp-2">
-                {item.name}
-              </h3>
+              <h3 className="font-semibold mb-2 line-clamp-2">{item.name}</h3>
 
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
@@ -305,10 +257,7 @@ export function MenuManagementPage() {
                   <span className="text-sm text-muted-foreground">
                     Category
                   </span>
-                  <Badge
-                    variant="secondary"
-                    className="text-xs"
-                  >
+                  <Badge variant="secondary" className="text-xs">
                     {item.category}
                   </Badge>
                 </div>
@@ -323,16 +272,10 @@ export function MenuManagementPage() {
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">
-                    Sizes
-                  </span>
+                  <span className="text-sm text-muted-foreground">Sizes</span>
                   <div className="flex gap-1">
                     {item.availableSizes.map((size) => (
-                      <Badge
-                        key={size}
-                        variant="outline"
-                        className="text-xs"
-                      >
+                      <Badge key={size} variant="outline" className="text-xs">
                         {size}
                       </Badge>
                     ))}
@@ -358,23 +301,20 @@ export function MenuManagementPage() {
         onOpenChange={(open) =>
           setEditDialog({
             open,
-            item: open ? editDialog.item : null,
-            mode: editDialog.mode,
+            item: editDialog.item,
           })
         }
       >
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>
-              {editDialog.mode === "add"
-                ? "Add Menu Item"
-                : "Edit Menu Item"}
+              {editDialog.item === null ? "Add Menu Item" : "Edit Menu Item"}
             </DialogTitle>
           </DialogHeader>
 
           <div className="space-y-4">
             <div>
-              <Label htmlFor="name">Item Name *</Label>
+              <Label htmlFor="name">Name *</Label>
               <Input
                 id="name"
                 value={formData.name}
@@ -437,7 +377,7 @@ export function MenuManagementPage() {
                 onValueChange={(value) =>
                   setFormData((prev) => ({
                     ...prev,
-                    temperature: value,
+                    category: value,
                   }))
                 }
               >
@@ -458,21 +398,13 @@ export function MenuManagementPage() {
               <Label>Available Sizes *</Label>
               <div className="flex gap-4 mt-2">
                 {sizes.map((size) => (
-                  <div
-                    key={size}
-                    className="flex items-center space-x-2"
-                  >
+                  <div key={size} className="flex items-center space-x-2">
                     <Checkbox
                       id={size}
-                      checked={formData.availableSizes.includes(
-                        size,
-                      )}
+                      checked={formData.availableSizes.includes(size)}
                       onCheckedChange={() => toggleSize(size)}
                     />
-                    <label
-                      htmlFor={size}
-                      className="text-sm cursor-pointer"
-                    >
+                    <label htmlFor={size} className="text-sm cursor-pointer">
                       {size}
                     </label>
                   </div>
@@ -488,16 +420,13 @@ export function MenuManagementPage() {
                 setEditDialog({
                   open: false,
                   item: null,
-                  mode: "add",
                 })
               }
             >
               Cancel
             </Button>
             <Button onClick={handleSave}>
-              {editDialog.mode === "add"
-                ? "Add Item"
-                : "Save Changes"}
+              {editDialog.item === null ? "Add Item" : "Update Item"}
             </Button>
           </DialogFooter>
         </DialogContent>

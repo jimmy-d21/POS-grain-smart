@@ -1,7 +1,16 @@
-import { Outlet, NavLink, Navigate } from 'react-router';
-import { LayoutDashboard, ShoppingCart, Package, Menu, Receipt, Users, Coffee, LogOut } from 'lucide-react';
-import { useStore } from '../lib/store.jsx';
-import { Button } from './ui/button';
+import { Outlet, NavLink, Navigate } from "react-router";
+import {
+  LayoutDashboard,
+  ShoppingCart,
+  Package,
+  Menu,
+  Receipt,
+  Users,
+  Coffee,
+  LogOut,
+} from "lucide-react";
+import { useStore } from "../lib/store.jsx";
+import { Button } from "./ui/button";
 
 export function RootLayout() {
   const { currentUser, cart, isAuthenticated, logout } = useStore();
@@ -10,18 +19,18 @@ export function RootLayout() {
   if (!isAuthenticated || !currentUser) {
     return <Navigate to="/login" replace />;
   }
-  
+
   const navItems = [
-    { path: '/', label: 'Cashier', icon: ShoppingCart, exact: true },
-    { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { path: '/inventory', label: 'Inventory', icon: Package },
-    { path: '/menu', label: 'Menu', icon: Menu },
-    { path: '/transactions', label: 'Transactions', icon: Receipt },
-    { path: '/staff', label: 'Staff', icon: Users, adminOnly: true }, // Manager only
+    { path: "/", label: "Cashier", icon: ShoppingCart, exact: true },
+    { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { path: "/inventory", label: "Inventory", icon: Package },
+    { path: "/menu", label: "Menu", icon: Menu },
+    { path: "/transactions", label: "Transactions", icon: Receipt },
+    { path: "/staff", label: "Staff", icon: Users, adminOnly: true }, // Manager only
   ];
 
-  const filteredNavItems = navItems.filter(item => 
-    !item.adminOnly || currentUser.role === 'Manager'
+  const filteredNavItems = navItems.filter(
+    (item) => !item.adminOnly || currentUser.role === "Manager",
   );
 
   return (
@@ -35,7 +44,9 @@ export function RootLayout() {
               <Coffee className="w-6 h-6 text-primary-foreground" />
             </div>
             <div>
-              <h1 className="text-lg font-semibold text-foreground">Grainsmart</h1>
+              <h1 className="text-lg font-semibold text-foreground">
+                Grainsmart
+              </h1>
               <p className="text-xs text-muted-foreground">Coffee POS</p>
             </div>
           </div>
@@ -53,8 +64,8 @@ export function RootLayout() {
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
                     isActive
-                      ? 'bg-primary text-primary-foreground'
-                      : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                   }`
                 }
               >
@@ -70,18 +81,19 @@ export function RootLayout() {
           <div className="flex items-center gap-3 px-4 py-3 bg-muted rounded-lg">
             <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
               <span className="text-sm font-semibold text-primary-foreground">
-                {currentUser.name.split(' ').map(n => n[0]).join('')}
+                {currentUser.name
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("")}
               </span>
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium truncate">{currentUser.name}</p>
-              <p className="text-xs text-muted-foreground">{currentUser.role}</p>
+              <p className="text-xs text-muted-foreground">
+                {currentUser.role}
+              </p>
             </div>
-            <Button
-              variant="ghost"
-              className="h-8 w-8 p-0"
-              onClick={logout}
-            >
+            <Button variant="ghost" className="h-8 w-8 p-0" onClick={logout}>
               <LogOut className="h-4 w-4" />
             </Button>
           </div>

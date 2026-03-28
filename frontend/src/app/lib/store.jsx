@@ -1,12 +1,12 @@
-import { createContext, useContext, useState } from 'react';
-import { 
-  mockMenuItems, 
-  mockAddOns, 
-  mockInventory, 
-  mockStaff, 
+import { createContext, useContext, useState } from "react";
+import {
+  mockMenuItems,
+  mockAddOns,
+  mockInventory,
+  mockStaff,
   mockTransactions,
-  demoPasswords 
-} from './data';
+  demoPasswords,
+} from "./data";
 
 // Store Context
 const StoreContext = createContext(undefined);
@@ -17,45 +17,52 @@ export const StoreProvider = ({ children }) => {
   const [menuItems, setMenuItems] = useState(mockMenuItems);
   const [inventory, setInventory] = useState(mockInventory);
   const [staff, setStaff] = useState(mockStaff);
+  const [addOns, setAddOns] = useState(mockAddOns);
   const [currentUser, setCurrentUser] = useState(() => {
     // Check localStorage for existing session
-    const savedUser = localStorage.getItem('grainsmart_user');
+    const savedUser = localStorage.getItem("grainsmart_user");
     return savedUser ? JSON.parse(savedUser) : null;
   });
-  const [addOns] = useState(mockAddOns);
 
-  const isAuthenticated = currentUser !== null && currentUser.status === 'Active';
+  const isAuthenticated =
+    currentUser !== null && currentUser.status === "Active";
 
   const login = (email, password) => {
-    const user = staff.find(s => s.email.toLowerCase() === email.toLowerCase());
-    
-    if (user && user.status === 'Active' && demoPasswords[user.email] === password) {
+    const user = staff.find(
+      (s) => s.email.toLowerCase() === email.toLowerCase(),
+    );
+
+    if (
+      user &&
+      user.status === "Active" &&
+      demoPasswords[user.email] === password
+    ) {
       setCurrentUser(user);
-      localStorage.setItem('grainsmart_user', JSON.stringify(user));
+      localStorage.setItem("grainsmart_user", JSON.stringify(user));
       return true;
     }
-    
+
     return false;
   };
 
   const logout = () => {
     setCurrentUser(null);
     setCart([]);
-    localStorage.removeItem('grainsmart_user');
+    localStorage.removeItem("grainsmart_user");
   };
 
   const addToCart = (item) => {
-    setCart(prev => [...prev, item]);
+    setCart((prev) => [...prev, item]);
   };
 
   const removeFromCart = (id) => {
-    setCart(prev => prev.filter(item => item.id !== id));
+    setCart((prev) => prev.filter((item) => item.id !== id));
   };
 
   const updateCartItem = (id, updates) => {
-    setCart(prev => prev.map(item => 
-      item.id === id ? { ...item, ...updates } : item
-    ));
+    setCart((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, ...updates } : item)),
+    );
   };
 
   const clearCart = () => {
@@ -63,37 +70,37 @@ export const StoreProvider = ({ children }) => {
   };
 
   const addTransaction = (transaction) => {
-    setTransactions(prev => [transaction, ...prev]);
+    setTransactions((prev) => [transaction, ...prev]);
   };
 
   const addMenuItem = (item) => {
-    setMenuItems(prev => [...prev, item]);
+    setMenuItems((prev) => [...prev, item]);
   };
 
   const updateMenuItem = (id, updates) => {
-    setMenuItems(prev => prev.map(item => 
-      item.id === id ? { ...item, ...updates } : item
-    ));
+    setMenuItems((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, ...updates } : item)),
+    );
   };
 
   const deleteMenuItem = (id) => {
-    setMenuItems(prev => prev.filter(item => item.id !== id));
+    setMenuItems((prev) => prev.filter((item) => item.id !== id));
   };
 
   const updateInventory = (id, updates) => {
-    setInventory(prev => prev.map(item => 
-      item.id === id ? { ...item, ...updates } : item
-    ));
+    setInventory((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, ...updates } : item)),
+    );
   };
 
   const addStaff = (staffMember) => {
-    setStaff(prev => [...prev, staffMember]);
+    setStaff((prev) => [...prev, staffMember]);
   };
 
   const updateStaff = (id, updates) => {
-    setStaff(prev => prev.map(s => 
-      s.id === id ? { ...s, ...updates } : s
-    ));
+    setStaff((prev) =>
+      prev.map((s) => (s.id === id ? { ...s, ...updates } : s)),
+    );
   };
 
   return (
@@ -130,7 +137,7 @@ export const StoreProvider = ({ children }) => {
 export const useStore = () => {
   const context = useContext(StoreContext);
   if (context === undefined) {
-    throw new Error('useStore must be used within a StoreProvider');
+    throw new Error("useStore must be used within a StoreProvider");
   }
   return context;
 };

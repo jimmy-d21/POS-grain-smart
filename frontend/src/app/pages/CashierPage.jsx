@@ -1,43 +1,60 @@
-import { useState } from 'react';
-import { useStore } from '../lib/store';
-import { Button } from '../components/ui/button';
-import { Card } from '../components/ui/card';
-import { Badge } from '../components/ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../components/ui/dialog';
-import { ScrollArea } from '../components/ui/scroll-area';
-import { Separator } from '../components/ui/separator';
-import { Plus, Minus, Trash2, Coffee, Thermometer, X } from 'lucide-react';
-import { toast } from 'sonner';
+import { useState } from "react";
+import { useStore } from "../lib/store";
+import { Button } from "../components/ui/button";
+import { Card } from "../components/ui/card";
+import { Badge } from "../components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "../components/ui/dialog";
+import { ScrollArea } from "../components/ui/scroll-area";
+import { Separator } from "../components/ui/separator";
+import { Plus, Minus, Trash2, Coffee, Thermometer, X } from "lucide-react";
+import { toast } from "sonner";
 
 const categories = [
-  'Regular Drinks',
-  'Frappee',
-  'Shimmer Juices',
-  'Premium Drinks',
-  'Rice Coffee Series',
+  "Regular Drinks",
+  "Frappee",
+  "Shimmer Juices",
+  "Premium Drinks",
+  "Rice Coffee Series",
 ];
 
 export function CashierPage() {
-  const { menuItems, cart, addToCart, removeFromCart, updateCartItem, clearCart, addTransaction, addOns, currentUser } = useStore();
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  const {
+    menuItems,
+    cart,
+    addToCart,
+    removeFromCart,
+    updateCartItem,
+    clearCart,
+    addTransaction,
+    addOns,
+    currentUser,
+  } = useStore();
+  const [selectedCategory, setSelectedCategory] = useState("All");
   const [customizeDialog, setCustomizeDialog] = useState({
     open: false,
     item: null,
   });
-  const [selectedSize, setSelectedSize] = useState('16oz');
-  const [selectedTemp, setSelectedTemp] = useState('Cold');
+  const [selectedSize, setSelectedSize] = useState("16oz");
+  const [selectedTemp, setSelectedTemp] = useState("Cold");
   const [selectedAddOns, setSelectedAddOns] = useState([]);
   const [checkoutDialog, setCheckoutDialog] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState('Cash');
+  const [paymentMethod, setPaymentMethod] = useState("Cash");
 
-  const filteredItems = selectedCategory === 'All' 
-    ? menuItems 
-    : menuItems.filter(item => item.category === selectedCategory);
+  const filteredItems =
+    selectedCategory === "All"
+      ? menuItems
+      : menuItems.filter((item) => item.category === selectedCategory);
 
   const handleItemClick = (item) => {
     setCustomizeDialog({ open: true, item });
     setSelectedSize(item.availableSizes[0]);
-    setSelectedTemp(item.temperature === 'Hot' ? 'Hot' : 'Cold');
+    setSelectedTemp(item.temperature === "Hot" ? "Hot" : "Cold");
     setSelectedAddOns([]);
   };
 
@@ -45,7 +62,8 @@ export function CashierPage() {
     if (!customizeDialog.item) return;
 
     const item = customizeDialog.item;
-    const sizeMultiplier = selectedSize === '12oz' ? 1 : selectedSize === '16oz' ? 1.2 : 1.4;
+    const sizeMultiplier =
+      selectedSize === "12oz" ? 1 : selectedSize === "16oz" ? 1.2 : 1.4;
     const addOnsTotal = selectedAddOns.reduce((sum, a) => sum + a.price, 0);
     const subtotal = item.basePrice * sizeMultiplier + addOnsTotal;
 
@@ -65,7 +83,7 @@ export function CashierPage() {
   };
 
   const handleQuantityChange = (id, delta) => {
-    const item = cart.find(i => i.id === id);
+    const item = cart.find((i) => i.id === id);
     if (!item) return;
 
     const newQuantity = item.quantity + delta;
@@ -83,7 +101,7 @@ export function CashierPage() {
 
   const handleCheckout = () => {
     if (cart.length === 0) {
-      toast.error('Cart is empty');
+      toast.error("Cart is empty");
       return;
     }
     setCheckoutDialog(true);
@@ -91,28 +109,28 @@ export function CashierPage() {
 
   const handleCompletePayment = () => {
     const total = cart.reduce((sum, item) => sum + item.subtotal, 0);
-    
+
     const transaction = {
       id: `txn-${Date.now()}`,
       items: [...cart],
       total,
       date: new Date(),
       paymentMethod,
-      status: 'Completed',
-      cashier: currentUser?.name || 'Unknown',
+      status: "Completed",
+      cashier: currentUser?.name || "Unknown",
     };
 
     addTransaction(transaction);
     clearCart();
     setCheckoutDialog(false);
-    toast.success('Order completed successfully!');
+    toast.success("Order completed successfully!");
   };
 
   const toggleAddOn = (addOn) => {
-    setSelectedAddOns(prev => {
-      const exists = prev.find(a => a.id === addOn.id);
+    setSelectedAddOns((prev) => {
+      const exists = prev.find((a) => a.id === addOn.id);
       if (exists) {
-        return prev.filter(a => a.id !== addOn.id);
+        return prev.filter((a) => a.id !== addOn.id);
       }
       return [...prev, addOn];
     });
@@ -127,20 +145,20 @@ export function CashierPage() {
         {/* Header */}
         <div className="p-6 border-b border-border bg-card">
           <h2 className="text-2xl font-semibold mb-4">Point of Sale</h2>
-          
+
           {/* Category Filters */}
           <div className="flex gap-2 flex-wrap">
             <Button
-              variant={selectedCategory === 'All' ? 'default' : 'outline'}
-              onClick={() => setSelectedCategory('All')}
+              variant={selectedCategory === "All" ? "default" : "outline"}
+              onClick={() => setSelectedCategory("All")}
               size="sm"
             >
               All Items
             </Button>
-            {categories.map(cat => (
+            {categories.map((cat) => (
               <Button
                 key={cat}
-                variant={selectedCategory === cat ? 'default' : 'outline'}
+                variant={selectedCategory === cat ? "default" : "outline"}
                 onClick={() => setSelectedCategory(cat)}
                 size="sm"
               >
@@ -153,7 +171,7 @@ export function CashierPage() {
         {/* Products Grid */}
         <ScrollArea className="flex-1 p-6">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {filteredItems.map(item => (
+            {filteredItems.map((item) => (
               <Card
                 key={item.id}
                 className="p-4 cursor-pointer hover:shadow-lg transition-shadow border-2 hover:border-primary"
@@ -162,9 +180,13 @@ export function CashierPage() {
                 <div className="aspect-square bg-muted rounded-lg mb-3 flex items-center justify-center">
                   <Coffee className="w-12 h-12 text-primary" />
                 </div>
-                <h3 className="font-semibold text-sm mb-1 line-clamp-2">{item.name}</h3>
+                <h3 className="font-semibold text-sm mb-1 line-clamp-2">
+                  {item.name}
+                </h3>
                 <div className="flex items-center justify-between">
-                  <span className="text-primary font-semibold">₱{item.basePrice}</span>
+                  <span className="text-primary font-semibold">
+                    ₱{item.basePrice}
+                  </span>
                   <Badge variant="outline" className="text-xs">
                     {item.availableSizes[0]}
                   </Badge>
@@ -198,11 +220,13 @@ export function CashierPage() {
             </div>
           ) : (
             <div className="space-y-4">
-              {cart.map(item => (
+              {cart.map((item) => (
                 <Card key={item.id} className="p-4">
                   <div className="flex justify-between items-start mb-2">
                     <div className="flex-1">
-                      <h4 className="font-semibold text-sm">{item.menuItem.name}</h4>
+                      <h4 className="font-semibold text-sm">
+                        {item.menuItem.name}
+                      </h4>
                       <div className="flex gap-2 mt-1">
                         <Badge variant="secondary" className="text-xs">
                           {item.size}
@@ -221,11 +245,11 @@ export function CashierPage() {
                       <Trash2 className="w-4 h-4" />
                     </Button>
                   </div>
-                  
+
                   {item.addOns.length > 0 && (
                     <div className="mb-2">
                       <p className="text-xs text-muted-foreground">
-                        Add-ons: {item.addOns.map(a => a.name).join(', ')}
+                        Add-ons: {item.addOns.map((a) => a.name).join(", ")}
                       </p>
                     </div>
                   )}
@@ -239,7 +263,9 @@ export function CashierPage() {
                       >
                         <Minus className="w-3 h-3" />
                       </Button>
-                      <span className="w-8 text-center font-semibold">{item.quantity}</span>
+                      <span className="w-8 text-center font-semibold">
+                        {item.quantity}
+                      </span>
                       <Button
                         variant="outline"
                         size="sm"
@@ -248,7 +274,9 @@ export function CashierPage() {
                         <Plus className="w-3 h-3" />
                       </Button>
                     </div>
-                    <span className="font-semibold text-primary">₱{item.subtotal.toFixed(2)}</span>
+                    <span className="font-semibold text-primary">
+                      ₱{item.subtotal.toFixed(2)}
+                    </span>
                   </div>
                 </Card>
               ))}
@@ -266,10 +294,12 @@ export function CashierPage() {
             <Separator />
             <div className="flex justify-between">
               <span className="font-semibold">Total</span>
-              <span className="text-2xl font-bold text-primary">₱{cartTotal.toFixed(2)}</span>
+              <span className="text-2xl font-bold text-primary">
+                ₱{cartTotal.toFixed(2)}
+              </span>
             </div>
           </div>
-          
+
           <Button
             className="w-full"
             size="lg"
@@ -282,22 +312,27 @@ export function CashierPage() {
       </div>
 
       {/* Customize Dialog */}
-      <Dialog open={customizeDialog.open} onOpenChange={(open) => setCustomizeDialog({ open, item: open ? customizeDialog.item : null })}>
+      <Dialog
+        open={customizeDialog.open}
+        onOpenChange={(open) =>
+          setCustomizeDialog({ open, item: open ? customizeDialog.item : null })
+        }
+      >
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>{customizeDialog.item?.name}</DialogTitle>
           </DialogHeader>
-          
+
           {customizeDialog.item && (
             <div className="space-y-4">
               {/* Size Selection */}
               <div>
                 <label className="text-sm font-semibold mb-2 block">Size</label>
                 <div className="flex gap-2">
-                  {customizeDialog.item.availableSizes.map(size => (
+                  {customizeDialog.item.availableSizes.map((size) => (
                     <Button
                       key={size}
-                      variant={selectedSize === size ? 'default' : 'outline'}
+                      variant={selectedSize === size ? "default" : "outline"}
                       onClick={() => setSelectedSize(size)}
                       className="flex-1"
                     >
@@ -308,21 +343,23 @@ export function CashierPage() {
               </div>
 
               {/* Temperature Selection */}
-              {customizeDialog.item.temperature === 'Both' && (
+              {customizeDialog.item.temperature === "Both" && (
                 <div>
-                  <label className="text-sm font-semibold mb-2 block">Temperature</label>
+                  <label className="text-sm font-semibold mb-2 block">
+                    Temperature
+                  </label>
                   <div className="flex gap-2">
                     <Button
-                      variant={selectedTemp === 'Hot' ? 'default' : 'outline'}
-                      onClick={() => setSelectedTemp('Hot')}
+                      variant={selectedTemp === "Hot" ? "default" : "outline"}
+                      onClick={() => setSelectedTemp("Hot")}
                       className="flex-1"
                     >
                       <Thermometer className="w-4 h-4 mr-2" />
                       Hot
                     </Button>
                     <Button
-                      variant={selectedTemp === 'Cold' ? 'default' : 'outline'}
-                      onClick={() => setSelectedTemp('Cold')}
+                      variant={selectedTemp === "Cold" ? "default" : "outline"}
+                      onClick={() => setSelectedTemp("Cold")}
                       className="flex-1"
                     >
                       <Coffee className="w-4 h-4 mr-2" />
@@ -334,20 +371,26 @@ export function CashierPage() {
 
               {/* Add-ons */}
               <div>
-                <label className="text-sm font-semibold mb-2 block">Add-ons (Optional)</label>
+                <label className="text-sm font-semibold mb-2 block">
+                  Add-ons (Optional)
+                </label>
                 <div className="grid grid-cols-2 gap-2">
-                  {addOns.map(addOn => {
-                    const isSelected = selectedAddOns.find(a => a.id === addOn.id);
+                  {addOns.map((addOn) => {
+                    const isSelected = selectedAddOns.find(
+                      (a) => a.id === addOn.id,
+                    );
                     return (
                       <Button
                         key={addOn.id}
-                        variant={isSelected ? 'default' : 'outline'}
+                        variant={isSelected ? "default" : "outline"}
                         onClick={() => toggleAddOn(addOn)}
                         className="justify-start text-xs h-auto py-2 px-3"
                       >
                         <div className="text-left">
                           <div className="font-semibold">{addOn.name}</div>
-                          <div className="text-xs opacity-80">+₱{addOn.price}</div>
+                          <div className="text-xs opacity-80">
+                            +₱{addOn.price}
+                          </div>
                         </div>
                       </Button>
                     );
@@ -360,8 +403,14 @@ export function CashierPage() {
                 <div className="flex justify-between items-center">
                   <span className="text-sm">Total Price</span>
                   <span className="text-xl font-bold text-primary">
-                    ₱{(
-                      customizeDialog.item.basePrice * (selectedSize === '12oz' ? 1 : selectedSize === '16oz' ? 1.2 : 1.4) +
+                    ₱
+                    {(
+                      customizeDialog.item.basePrice *
+                        (selectedSize === "12oz"
+                          ? 1
+                          : selectedSize === "16oz"
+                            ? 1.2
+                            : 1.4) +
                       selectedAddOns.reduce((sum, a) => sum + a.price, 0)
                     ).toFixed(2)}
                   </span>
@@ -371,7 +420,10 @@ export function CashierPage() {
           )}
 
           <DialogFooter>
-            <Button variant="outline" onClick={() => setCustomizeDialog({ open: false, item: null })}>
+            <Button
+              variant="outline"
+              onClick={() => setCustomizeDialog({ open: false, item: null })}
+            >
               Cancel
             </Button>
             <Button onClick={handleAddToCart}>Add to Cart</Button>
@@ -390,17 +442,21 @@ export function CashierPage() {
             <div className="p-4 bg-muted rounded-lg">
               <div className="flex justify-between text-lg font-semibold">
                 <span>Total Amount</span>
-                <span className="text-2xl text-primary">₱{cartTotal.toFixed(2)}</span>
+                <span className="text-2xl text-primary">
+                  ₱{cartTotal.toFixed(2)}
+                </span>
               </div>
             </div>
 
             <div>
-              <label className="text-sm font-semibold mb-2 block">Payment Method</label>
+              <label className="text-sm font-semibold mb-2 block">
+                Payment Method
+              </label>
               <div className="grid grid-cols-3 gap-2">
-                {['Cash', 'Card', 'E-Wallet'].map(method => (
+                {["Cash", "Card", "E-Wallet"].map((method) => (
                   <Button
                     key={method}
-                    variant={paymentMethod === method ? 'default' : 'outline'}
+                    variant={paymentMethod === method ? "default" : "outline"}
                     onClick={() => setPaymentMethod(method)}
                   >
                     {method}
@@ -414,9 +470,7 @@ export function CashierPage() {
             <Button variant="outline" onClick={() => setCheckoutDialog(false)}>
               Cancel
             </Button>
-            <Button onClick={handleCompletePayment}>
-              Complete Payment
-            </Button>
+            <Button onClick={handleCompletePayment}>Complete Payment</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
