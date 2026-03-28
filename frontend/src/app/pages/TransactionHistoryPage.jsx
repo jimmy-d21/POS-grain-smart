@@ -58,9 +58,9 @@ export function TransactionHistoryPage() {
 
   const formatDate = (date) => {
     return new Date(date).toLocaleString("en-US", {
-      year: "numeric",
       month: "short",
       day: "numeric",
+      year: "numeric",
       hour: "2-digit",
       minute: "2-digit",
     });
@@ -80,9 +80,17 @@ export function TransactionHistoryPage() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="p-6 space-y-6">
+      {/* Header */}
+      <div>
+        <h1 className="text-3xl font-semibold mb-2">Transaction History</h1>
+        <p className="text-muted-foreground">
+          View and manage all transactions
+        </p>
+      </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -91,7 +99,9 @@ export function TransactionHistoryPage() {
             <DollarSign className="w-5 h-5 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">₱{totalRevenue.toFixed(2)}</div>
+            <div className="text-2xl font-bold text-primary">
+              ₱{totalRevenue.toFixed(2)}
+            </div>
           </CardContent>
         </Card>
 
@@ -137,8 +147,8 @@ export function TransactionHistoryPage() {
       {/* Filters */}
       <Card>
         <CardContent className="pt-6">
-          <div className="flex flex-col md:flex-col lg:flex-row gap-4">
-            <div className="relative flex-1">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
                 placeholder="Search by transaction ID or cashier..."
@@ -196,10 +206,14 @@ export function TransactionHistoryPage() {
                 ) : (
                   filteredTransactions.map((txn) => (
                     <TableRow key={txn.id}>
-                      <TableCell>{txn.id}</TableCell>
-                      <TableCell>{formatDate(txn.date)}</TableCell>
+                      <TableCell className="font-mono text-sm">
+                        {txn.id}
+                      </TableCell>
+                      <TableCell className="text-sm">
+                        {formatDate(txn.date)}
+                      </TableCell>
                       <TableCell>{txn.items.length} item(s)</TableCell>
-                      <TableCell>{txn.cashier || "N/A"}</TableCell>
+                      <TableCell>{txn.cashier}</TableCell>
                       <TableCell>
                         <Badge variant="outline">{txn.paymentMethod}</Badge>
                       </TableCell>
@@ -236,7 +250,10 @@ export function TransactionHistoryPage() {
       <Dialog
         open={detailsDialog.open}
         onOpenChange={(open) =>
-          setDetailsDialog({ open, transaction: detailsDialog.transaction })
+          setDetailsDialog({
+            open,
+            transaction: open ? detailsDialog.transaction : null,
+          })
         }
       >
         <DialogContent className="max-w-2xl">

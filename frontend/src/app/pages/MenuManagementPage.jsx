@@ -46,15 +46,16 @@ export function MenuManagementPage() {
   const [editDialog, setEditDialog] = useState({
     open: false,
     item: null,
+    mode: "add",
   });
 
   // Form state
   const [formData, setFormData] = useState({
     name: "",
-    category: "",
+    category: "Regular Drinks",
     basePrice: "",
-    temperature: "",
-    availableSizes: [],
+    temperature: "Cold",
+    availableSizes: ["16oz"],
   });
 
   const filteredItems = menuItems.filter((item) => {
@@ -69,12 +70,12 @@ export function MenuManagementPage() {
   const handleOpenAdd = () => {
     setFormData({
       name: "",
-      category: "",
+      category: "Regular Drinks",
       basePrice: "",
-      temperature: "",
-      availableSizes: [],
+      temperature: "Cold",
+      availableSizes: ["16oz"],
     });
-    setEditDialog({ open: true, item: null });
+    setEditDialog({ open: true, item: null, mode: "add" });
   };
 
   const handleOpenEdit = (item) => {
@@ -83,9 +84,9 @@ export function MenuManagementPage() {
       category: item.category,
       basePrice: item.basePrice.toString(),
       temperature: item.temperature,
-      availableSizes: [...item.availableSizes],
+      availableSizes: item.availableSizes,
     });
-    setEditDialog({ open: true, item: item });
+    setEditDialog({ open: true, item, mode: "edit" });
   };
 
   const handleSave = () => {
@@ -104,7 +105,7 @@ export function MenuManagementPage() {
       return;
     }
 
-    if (!editDialog.item) {
+    if (editDialog.mode === "add") {
       const newItem = {
         id: `m${Date.now()}`,
         name: formData.name,
@@ -115,7 +116,7 @@ export function MenuManagementPage() {
       };
       addMenuItem(newItem);
       toast.success("Menu item added successfully!");
-    } else {
+    } else if (editDialog.item) {
       updateMenuItem(editDialog.item.id, {
         name: formData.name,
         category: formData.category,
@@ -126,7 +127,7 @@ export function MenuManagementPage() {
       toast.success("Menu item updated successfully!");
     }
 
-    setEditDialog({ open: false, item: null });
+    setEditDialog({ open: false, item: null, mode: "add" });
   };
 
   const handleDelete = (item) => {
@@ -137,12 +138,12 @@ export function MenuManagementPage() {
   };
 
   const toggleSize = (size) => {
-    setFormData((prev) => ({
-      ...prev,
-      availableSizes: prev.availableSizes.includes(size)
+    setFormData((prev) => {
+      const sizes = prev.availableSizes.includes(size)
         ? prev.availableSizes.filter((s) => s !== size)
-        : [...prev.availableSizes, size],
-    }));
+        : [...prev.availableSizes, size];
+      return { ...prev, availableSizes: sizes };
+    });
   };
 
   return (
@@ -162,7 +163,17 @@ export function MenuManagementPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Total Items
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{menuItems.length}</div>
+          </CardContent>
+        </Card>
         {categories.map((cat) => (
           <Card key={cat}>
             <CardHeader className="pb-2">
@@ -182,8 +193,8 @@ export function MenuManagementPage() {
       {/* Filters */}
       <Card>
         <CardContent className="pt-6">
-          <div className="flex flex-col md:flex-row gap-4 items-end">
-            <div className="relative flex-1">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
                 placeholder="Search menu items..."
@@ -216,12 +227,14 @@ export function MenuManagementPage() {
       </Card>
 
       {/* Menu Items Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {filteredItems.map((item) => (
           <Card key={item.id} className="hover:shadow-lg transition-shadow">
             <CardContent className="pt-6">
-              <div className="flex items-center justify-between mb-4">
-                <Badge variant="secondary">{item.category}</Badge>
+              <div className="flex items-start justify-between mb-4">
+                <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center">
+                  <Coffee className="w-8 h-8 text-primary" />
+                </div>
                 <div className="flex gap-1">
                   <Button
                     variant="ghost"
@@ -301,20 +314,21 @@ export function MenuManagementPage() {
         onOpenChange={(open) =>
           setEditDialog({
             open,
-            item: editDialog.item,
+            item: open ? editDialog.item : null,
+            mode: editDialog.mode,
           })
         }
       >
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>
-              {editDialog.item === null ? "Add Menu Item" : "Edit Menu Item"}
+              {editDialog.mode === "add" ? "Add Menu Item" : "Edit Menu Item"}
             </DialogTitle>
           </DialogHeader>
 
           <div className="space-y-4">
             <div>
-              <Label htmlFor="name">Name *</Label>
+              <Label htmlFor="name">Item Name *</Label>
               <Input
                 id="name"
                 value={formData.name}
@@ -377,7 +391,7 @@ export function MenuManagementPage() {
                 onValueChange={(value) =>
                   setFormData((prev) => ({
                     ...prev,
-                    category: value,
+                    temperature: value,
                   }))
                 }
               >
@@ -420,13 +434,14 @@ export function MenuManagementPage() {
                 setEditDialog({
                   open: false,
                   item: null,
+                  mode: "add",
                 })
               }
             >
               Cancel
             </Button>
             <Button onClick={handleSave}>
-              {editDialog.item === null ? "Add Item" : "Update Item"}
+              {editDialog.mode === "add" ? "Add Item" : "Save Changes"}
             </Button>
           </DialogFooter>
         </DialogContent>

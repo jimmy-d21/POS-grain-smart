@@ -70,6 +70,7 @@ export function InventoryPage() {
 
     updateInventory(restockDialog.item.id, {
       currentStock: restockDialog.item.currentStock + amount,
+      lastRestocked: new Date(),
     });
 
     toast.success(`${restockDialog.item.name} restocked successfully!`);
@@ -79,10 +80,10 @@ export function InventoryPage() {
 
   const getStockStatus = (item) => {
     const percentage = (item.currentStock / item.reorderLevel) * 100;
-    if (percentage <= 25) return { label: "Critical", color: "bg-red-500" };
-    if (percentage <= 50) return { label: "Low", color: "bg-yellow-500" };
-    if (percentage <= 100) return { label: "Normal", color: "bg-green-500" };
-    return { label: "Surplus", color: "bg-blue-500" };
+    if (percentage <= 100)
+      return { label: "Low Stock", variant: "destructive" };
+    if (percentage <= 150) return { label: "Medium", variant: "secondary" };
+    return { label: "In Stock", variant: "default" };
   };
 
   const formatDate = (date) => {
@@ -103,34 +104,73 @@ export function InventoryPage() {
             Track and manage raw materials and supplies
           </p>
         </div>
-        <div className="space-y-1 text-right">
-          <p className="text-sm">
-            Low-stock items: <span className="font-bold">{lowStockCount}</span>
-          </p>
-        </div>
+      </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Total Items
+            </CardTitle>
+            <Package className="w-5 h-5 text-primary" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold">{inventory.length}</div>
+          </CardContent>
+        </Card>
+
+        <Card className={lowStockCount > 0 ? "border-destructive" : ""}>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Low Stock Alerts
+            </CardTitle>
+            <AlertTriangle
+              className={`w-5 h-5 ${lowStockCount > 0 ? "text-destructive" : "text-muted-foreground"}`}
+            />
+          </CardHeader>
+          <CardContent>
+            <div
+              className={`text-3xl font-bold ${lowStockCount > 0 ? "text-destructive" : ""}`}
+            >
+              {lowStockCount}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Categories
+            </CardTitle>
+            <Package className="w-5 h-5 text-secondary" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold">{categories.length - 1}</div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Filters */}
       <Card>
-        <CardContent>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+        <CardContent className="pt-6">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
-                type="search"
                 placeholder="Search inventory..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10"
               />
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex gap-2 flex-wrap">
               {categories.map((cat) => (
                 <Button
                   key={cat}
                   variant={selectedCategory === cat ? "default" : "outline"}
-                  size="sm"
                   onClick={() => setSelectedCategory(cat)}
+                  size="sm"
                 >
                   {cat}
                 </Button>
@@ -171,7 +211,7 @@ export function InventoryPage() {
                   </TableRow>
                 ) : (
                   filteredInventory.map((item) => {
-                    const stockStatus = getStockStatus(item);
+                    const status = getStockStatus(item);
                     return (
                       <TableRow key={item.id}>
                         <TableCell className="font-medium">
@@ -179,17 +219,25 @@ export function InventoryPage() {
                         </TableCell>
                         <TableCell>{item.category}</TableCell>
                         <TableCell>
-                          {item.currentStock} {item.unit}
+                          <span
+                            className={
+                              item.currentStock <= item.reorderLevel
+                                ? "text-destructive font-semibold"
+                                : ""
+                            }
+                          >
+                            {item.currentStock} {item.unit}
+                          </span>
                         </TableCell>
                         <TableCell>
                           {item.reorderLevel} {item.unit}
                         </TableCell>
                         <TableCell>
-                          <Badge className={stockStatus.color}>
-                            {stockStatus.label}
-                          </Badge>
+                          <Badge variant={status.variant}>{status.label}</Badge>
                         </TableCell>
-                        <TableCell>{formatDate(item.lastRestocked)}</TableCell>
+                        <TableCell className="text-sm text-muted-foreground">
+                          {formatDate(item.lastRestocked)}
+                        </TableCell>
                         <TableCell>
                           <Button
                             size="sm"
@@ -215,7 +263,9 @@ export function InventoryPage() {
       {/* Restock Dialog */}
       <Dialog
         open={restockDialog.open}
-        onOpenChange={(open) => setRestockDialog((prev) => ({ ...prev, open }))}
+        onOpenChange={(open) =>
+          setRestockDialog({ open, item: open ? restockDialog.item : null })
+        }
       >
         <DialogContent>
           <DialogHeader>

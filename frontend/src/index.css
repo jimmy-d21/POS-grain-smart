@@ -1,1 +1,140 @@
 @import "tailwindcss";
+@import "./app/styles/theme.css";
+
+@layer base {
+  html {
+    font-size: var(--font-size);
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family:
+      Inter,
+      system-ui,
+      -apple-system,
+      Segoe UI,
+      sans-serif;
+  }
+
+  .bg-background {
+    background-color: var(--background);
+  }
+  .text-foreground {
+    color: var(--foreground);
+  }
+  .bg-card {
+    background-color: var(--card);
+  }
+  .text-card-foreground {
+    color: var(--card-foreground);
+  }
+  .bg-popover {
+    background-color: var(--popover);
+  }
+  .text-popover-foreground {
+    color: var(--popover-foreground);
+  }
+  .border-border {
+    border-color: var(--border);
+  }
+  .bg-muted {
+    background-color: var(--muted);
+  }
+  .text-muted-foreground {
+    color: var(--muted-foreground);
+  }
+  .bg-primary {
+    background-color: var(--primary);
+  }
+  .text-primary {
+    color: var(--primary);
+  }
+  .bg-secondary {
+    background-color: var(--secondary);
+  }
+  .text-secondary {
+    color: var(--secondary);
+  }
+  .bg-accent {
+    background-color: var(--accent);
+  }
+  .text-accent {
+    color: var(--accent);
+  }
+  .bg-destructive {
+    background-color: var(--destructive);
+  }
+  .text-destructive {
+    color: var(--destructive);
+  }
+  .bg-sidebar {
+    background-color: var(--sidebar);
+  }
+  .text-sidebar-foreground {
+    color: var(--sidebar-foreground);
+  }
+  .bg-sidebar-primary {
+    background-color: var(--sidebar-primary);
+  }
+  .text-sidebar-primary-foreground {
+    color: var(--sidebar-primary-foreground);
+  }
+  .bg-sidebar-accent {
+    background-color: var(--sidebar-accent);
+  }
+  .text-sidebar-accent-foreground {
+    color: var(--sidebar-accent-foreground);
+  }
+  .border-sidebar-border {
+    border-color: var(--sidebar-border);
+  }
+  .ring-sidebar-ring {
+    box-shadow: 0 0 0 2px var(--sidebar-ring);
+  }
+  .ring-ring {
+    box-shadow: 0 0 0 2px var(--ring);
+  }
+
+  h1 {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  h2 {
+    font-size: var(--text-xl);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  h3 {
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  h4 {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  label {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  button {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  input {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-normal);
+    line-height: 1.5;
+  }
+}

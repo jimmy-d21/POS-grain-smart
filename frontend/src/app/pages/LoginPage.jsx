@@ -98,7 +98,7 @@ export function LoginPage() {
                     placeholder="your.email@grainsmart.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10"
+                    className="pl-10 bg-muted/50"
                     disabled={isLoading}
                   />
                 </div>
@@ -114,7 +114,7 @@ export function LoginPage() {
                     placeholder="Enter your password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10"
+                    className="pl-10 bg-muted/50"
                     disabled={isLoading}
                   />
                 </div>
@@ -144,7 +144,7 @@ export function LoginPage() {
                   variant="outline"
                   onClick={() => handleDemoLogin("Manager")}
                   disabled={isLoading}
-                  className="w-full"
+                  className="w-full border-border"
                 >
                   <Lock className="w-4 h-4 mr-2" />
                   Manager Demo
@@ -154,7 +154,7 @@ export function LoginPage() {
                   variant="outline"
                   onClick={() => handleDemoLogin("Cashier")}
                   disabled={isLoading}
-                  className="w-full"
+                  className="w-full border-border"
                 >
                   <Coffee className="w-4 h-4 mr-2" />
                   Cashier Demo
