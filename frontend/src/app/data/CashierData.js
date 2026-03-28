@@ -1,5 +1,4 @@
 export const categories = [
-  "All",
   "Regular Drinks",
   "Frappee",
   "Shimmer Juices",
