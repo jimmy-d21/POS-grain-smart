@@ -318,7 +318,7 @@ export function CashierPage() {
           setCustomizeDialog({ open, item: open ? customizeDialog.item : null })
         }
       >
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-xl">
           <DialogHeader>
             <DialogTitle>{customizeDialog.item?.name}</DialogTitle>
           </DialogHeader>
@@ -334,7 +334,7 @@ export function CashierPage() {
                       key={size}
                       variant={selectedSize === size ? "default" : "outline"}
                       onClick={() => setSelectedSize(size)}
-                      className="flex-1"
+                      className="flex-1 border-border"
                     >
                       {size}
                     </Button>
@@ -352,7 +352,7 @@ export function CashierPage() {
                     <Button
                       variant={selectedTemp === "Hot" ? "default" : "outline"}
                       onClick={() => setSelectedTemp("Hot")}
-                      className="flex-1"
+                      className="flex-1 border-border"
                     >
                       <Thermometer className="w-4 h-4 mr-2" />
                       Hot
@@ -360,7 +360,7 @@ export function CashierPage() {
                     <Button
                       variant={selectedTemp === "Cold" ? "default" : "outline"}
                       onClick={() => setSelectedTemp("Cold")}
-                      className="flex-1"
+                      className="flex-1 border-border"
                     >
                       <Coffee className="w-4 h-4 mr-2" />
                       Cold
@@ -384,7 +384,7 @@ export function CashierPage() {
                         key={addOn.id}
                         variant={isSelected ? "default" : "outline"}
                         onClick={() => toggleAddOn(addOn)}
-                        className="justify-start text-xs h-auto py-2 px-3"
+                        className="justify-start text-xs h-auto py-2 px-3 border-border"
                       >
                         <div className="text-left">
                           <div className="font-semibold">{addOn.name}</div>
