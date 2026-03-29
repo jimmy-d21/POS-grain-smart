@@ -129,12 +129,13 @@ export function TransactionHistoryPage() {
                 placeholder="Search by transaction ID or cashier..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
+                className="pl-10 bg-muted/50"
               />
             </div>
             <div className="flex gap-2">
               {transactionStatuses.map((status) => (
                 <Button
+                  className="border border-border"
                   key={status}
                   variant={selectedStatus === status ? "default" : "outline"}
                   onClick={() => setSelectedStatus(status)}
@@ -202,6 +203,7 @@ export function TransactionHistoryPage() {
                       </TableCell>
                       <TableCell>
                         <Button
+                          className="border border-border"
                           variant="ghost"
                           size="sm"
                           onClick={() =>

@@ -192,7 +192,7 @@ export function StaffManagementPage() {
                 placeholder="Search by name or email..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
+                className="pl-10 border-border"
               />
             </div>
             <div className="flex gap-2">
@@ -202,6 +202,7 @@ export function StaffManagementPage() {
                   variant={selectedRole === role ? "default" : "outline"}
                   onClick={() => setSelectedRole(role)}
                   size="sm"
+                  className="border-border"
                 >
                   {role}
                 </Button>
@@ -279,6 +280,7 @@ export function StaffManagementPage() {
                       <TableCell>
                         <div className="flex gap-1">
                           <Button
+                            className="border border-border"
                             variant="ghost"
                             size="sm"
                             onClick={() => handleOpenView(staffMember)}
@@ -287,6 +289,7 @@ export function StaffManagementPage() {
                             View
                           </Button>
                           <Button
+                            className="border border-border"
                             variant="ghost"
                             size="sm"
                             onClick={() => handleOpenEdit(staffMember)}
@@ -298,11 +301,11 @@ export function StaffManagementPage() {
                             variant="ghost"
                             size="sm"
                             onClick={() => handleToggleStatus(staffMember)}
-                            className={
+                            className={`${
                               staffMember.status === "Active"
                                 ? "text-destructive"
                                 : ""
-                            }
+                            } border border-border`}
                           >
                             {staffMember.status === "Active"
                               ? "Deactivate"
@@ -332,60 +335,104 @@ export function StaffManagementPage() {
           {viewDialog.item && (
             <div className="space-y-6">
               <div className="space-y-4">
-                <div>
-                  <div className="text-xs text-muted-foreground mb-1">Name</div>
-                  <div className="font-semibold">{viewDialog.item.name}</div>
-                </div>
-
-                <div>
-                  <div className="text-xs text-muted-foreground mb-1">
-                    Email
-                  </div>
-                  <div className="font-semibold">{viewDialog.item.email}</div>
-                </div>
-
-                <div className="p-3 bg-muted rounded-lg">
-                  <div className="text-xs text-muted-foreground mb-1">
-                    Password
-                  </div>
-                  <div className="font-semibold font-mono">
-                    {demoPasswords[viewDialog.item.email] || "Not available"}
-                  </div>
-                  <div className="text-xs text-muted-foreground mt-1">
-                    Demo password for testing purposes
+                <div className="flex justify-center mb-4">
+                  <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center">
+                    <span className="text-2xl font-semibold text-primary-foreground">
+                      {viewDialog.item.name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")}
+                    </span>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-3">
                   <div className="p-3 bg-muted rounded-lg">
                     <div className="text-xs text-muted-foreground mb-1">
-                      Role
+                      Full Name
                     </div>
-                    <Badge
-                      variant={
-                        viewDialog.item.role === "Manager"
-                          ? "default"
-                          : "secondary"
-                      }
-                    >
-                      {viewDialog.item.role}
-                    </Badge>
+                    <div className="font-semibold">{viewDialog.item.name}</div>
                   </div>
 
                   <div className="p-3 bg-muted rounded-lg">
                     <div className="text-xs text-muted-foreground mb-1">
-                      Status
+                      Email Address
                     </div>
-                    <Badge
-                      variant={
-                        viewDialog.item.status === "Active"
-                          ? "default"
-                          : "outline"
-                      }
-                    >
-                      {viewDialog.item.status}
-                    </Badge>
+                    <div className="font-semibold">{viewDialog.item.email}</div>
                   </div>
+
+                  <div className="p-3 bg-muted rounded-lg">
+                    <div className="text-xs text-muted-foreground mb-1">
+                      Password
+                    </div>
+                    <div className="font-semibold font-mono">
+                      {demoPasswords[viewDialog.item.email] || "Not available"}
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-1">
+                      Demo password for testing purposes
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="p-3 bg-muted rounded-lg">
+                      <div className="text-xs text-muted-foreground mb-1">
+                        Role
+                      </div>
+                      <Badge
+                        variant={
+                          viewDialog.item.role === "Manager"
+                            ? "default"
+                            : "secondary"
+                        }
+                        className="mt-1"
+                      >
+                        {viewDialog.item.role === "Manager" ? (
+                          <Shield className="w-3 h-3 mr-1" />
+                        ) : (
+                          <User className="w-3 h-3 mr-1" />
+                        )}
+                        {viewDialog.item.role}
+                      </Badge>
+                    </div>
+
+                    <div className="p-3 bg-muted rounded-lg">
+                      <div className="text-xs text-muted-foreground mb-1">
+                        Status
+                      </div>
+                      <Badge
+                        variant={
+                          viewDialog.item.status === "Active"
+                            ? "default"
+                            : "outline"
+                        }
+                        className="mt-1"
+                      >
+                        {viewDialog.item.status}
+                      </Badge>
+                    </div>
+                  </div>
+
+                  <div className="p-3 bg-muted rounded-lg">
+                    <div className="text-xs text-muted-foreground mb-1">
+                      Staff ID
+                    </div>
+                    <div className="font-semibold font-mono text-sm">
+                      {viewDialog.item.id}
+                    </div>
+                  </div>
+
+                  {viewDialog.item.role === "Manager" && (
+                    <div className="p-3 bg-primary/10 border border-primary rounded-lg">
+                      <div className="flex items-start gap-2">
+                        <Shield className="w-4 h-4 text-primary mt-0.5" />
+                        <div className="text-xs text-primary">
+                          This staff member has full access to all features
+                          including inventory, menu management, staff
+                          management, and analytics.
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -423,7 +470,7 @@ export function StaffManagementPage() {
                   setFormData((prev) => ({ ...prev, name: e.target.value }))
                 }
                 placeholder="e.g., Juan Dela Cruz"
-                className="mt-2"
+                className="mt-2 bg-muted/50 border-border"
               />
             </div>
 
@@ -437,19 +484,20 @@ export function StaffManagementPage() {
                   setFormData((prev) => ({ ...prev, email: e.target.value }))
                 }
                 placeholder="e.g., juan@grainsmart.com"
-                className="mt-2"
+                className="mt-2 bg-muted/50 border-border"
               />
             </div>
 
             <div>
               <Label htmlFor="role">Role *</Label>
               <Select
+                className="w-full bg-muted/50 border-border"
                 value={formData.role}
                 onValueChange={(value) =>
                   setFormData((prev) => ({ ...prev, role: value }))
                 }
               >
-                <SelectTrigger className="mt-2">
+                <SelectTrigger className="mt-2 bg-muted/50 border-border">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -477,7 +525,7 @@ export function StaffManagementPage() {
                   setFormData((prev) => ({ ...prev, status: value }))
                 }
               >
-                <SelectTrigger className="mt-2">
+                <SelectTrigger className="mt-2 bg-muted/50 border-border">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -493,15 +541,14 @@ export function StaffManagementPage() {
 
           <DialogFooter>
             <Button
+              className="border-border"
               variant="outline"
               onClick={() => setEditDialog({ open: false, item: null })}
             >
               Cancel
             </Button>
             <Button onClick={handleSave}>
-              {editDialog.item === null
-                ? "Add Staff Member"
-                : "Update Staff Member"}
+              {editDialog.item === null ? "Add Staff Member" : "Save Changes"}
             </Button>
           </DialogFooter>
         </DialogContent>
